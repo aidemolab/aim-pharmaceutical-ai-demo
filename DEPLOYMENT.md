@@ -4,7 +4,7 @@ A React/Vite demonstration app with pharmaceutical market analysis, import and p
 
 ## Deployment plan
 - Frontend: GitHub Pages at https://aidemolab.github.io/aim-pharmaceutical-ai-demo/
-- Backend: Supabase Edge Function `pharma-openrouter-chat` in AIM Smart Solutions Supabase project.
+- Backend: Supabase Edge Function `pharma-openrouter-chat` in the dedicated AIM Pharmaceutical AI Demo Supabase project.
 - OpenRouter model: `deepseek/deepseek-v4.1-flash-1017`.
 - Secret: `OPENROUTER_API_KEY`, stored in Supabase Edge Function Secrets. Never put it in GitHub, browser code or environment variables prefixed with VITE_.
 
