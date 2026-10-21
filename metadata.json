@@ -1,0 +1,6 @@
+{
+  "name": "Pharmaceutical Market Entry Decision-Support App",
+  "description": "A comprehensive decision-support tool for pharmaceutical market entry, featuring product opportunities, pilot import simulators, pricing/margin models, and an AI analysis assistant.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
