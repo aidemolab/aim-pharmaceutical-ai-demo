@@ -36,3 +36,29 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  verify-assistant:
+    runs-on: ubuntu-latest
+    needs: deploy
+    steps:
+      - name: Confirm DeepSeek backend responds
+        shell: bash
+        run: |
+          python - <<'PY'
+          import urllib.request, urllib.error, json, sys
+          url="https://xlxyphqzdzhipmllhxaq.supabase.co/functions/v1/pharma-openrouter-chat"
+          payload={"messages":[{"role":"user","content":"In one sentence explain what gross margin means."}],"appStateSummary":"This is an illustrative pharmaceutical planning demonstration."}
+          req=urllib.request.Request(url,data=json.dumps(payload).encode(),headers={"Origin":"https://aidemolab.github.io","Content-Type":"application/json"},method="POST")
+          try:
+              with urllib.request.urlopen(req,timeout=45) as res:
+                  data=json.load(res)
+                  assert isinstance(data.get("text"),str) and len(data["text"])>20, "AI response is empty"
+                  print("PASS: Server-side OpenRouter model returned non-empty assistant text.")
+          except urllib.error.HTTPError as e:
+              print("FAILED: backend HTTP status:",e.code)
+              print("Message:",e.read(400).decode(errors="replace"))
+              sys.exit(1)
+          except Exception as e:
+              print("FAILED:",type(e).__name__,str(e)[:250])
+              sys.exit(1)
+          PY
