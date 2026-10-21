@@ -12,11 +12,11 @@ interface Message {
   content: string;
 }
 
-export default function GeminiAssistant() {
+export default function DeepSeekAssistant() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: "Hello! I am your AI Pharmaceutical Strategy Assistant. I have full real-time access to your survey databases, weighted opportunity rankings, and financial simulators. \n\nWhat strategic decisions can I help you analyze today?"
+      content: "Hello! I am the AIM Smart Solutions Pharmaceutical Strategy Assistant. I can use the sample dataset metrics and calculations supplied by this demonstration. \n\nWhat strategic decisions can I help you analyze today?"
     }
   ]);
   const [inputValue, setInputValue] = useState('');
@@ -38,7 +38,7 @@ export default function GeminiAssistant() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isLoading]);
 
-  // Construct a summary of current app calculations to feed to Gemini's prompt context
+  // Construct a summary of current app calculations to feed to the assistant's prompt context
   const appStateSummary = useMemo(() => {
     const opportunities = calculateOpportunityScores();
     const traction = calculateTractionMetrics();
@@ -72,7 +72,7 @@ Early Traction & Pipeline Metrics (Phase 4 Prototype Preview):
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/gemini/chat', {
+      const response = await fetch('https://pabdxvsukpznvfgathre.supabase.co/functions/v1/pharma-openrouter-chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -144,7 +144,7 @@ Early Traction & Pipeline Metrics (Phase 4 Prototype Preview):
               <span className="animate-bounce">●</span>
               <span className="animate-bounce delay-100">●</span>
               <span className="animate-bounce delay-200">●</span>
-              <span className="text-xs italic ml-1">Assistant is analyzing dataset metrics...</span>
+              <span className="text-xs italic ml-1">Assistant is analysing demo metrics...</span>
             </div>
           </div>
         )}
