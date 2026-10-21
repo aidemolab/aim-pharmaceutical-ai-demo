@@ -72,7 +72,7 @@ Early Traction & Pipeline Metrics (Phase 4 Prototype Preview):
     setIsLoading(true);
 
     try {
-      const response = await fetch('https://pabdxvsukpznvfgathre.supabase.co/functions/v1/pharma-openrouter-chat', {
+      const response = await fetch('https://xlxyphqzdzhipmllhxaq.supabase.co/functions/v1/pharma-openrouter-chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
