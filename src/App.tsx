@@ -42,8 +42,8 @@ export default function App() {
               <Landmark className="w-4 h-4" />
             </div>
             <div className="flex flex-col">
-              <span className="font-extrabold text-sm tracking-tight text-[#1F3864]">Aegis Distribution</span>
-              <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-widest -mt-0.5">Pilot Program</span>
+              <span className="font-extrabold text-sm tracking-tight text-[#1F3864]">AIM Smart Solutions</span>
+              <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-widest -mt-0.5">Pharmaceutical Application</span>
             </div>
           </div>
 
