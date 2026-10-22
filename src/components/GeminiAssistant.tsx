@@ -60,6 +60,7 @@ export default function DeepSeekAssistant() {
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [limitNotice, setLimitNotice] = useState<'ip_limit' | 'global_limit' | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -104,6 +105,7 @@ Early Traction & Pipeline Metrics (Phase 4 Prototype Preview):
     if (!text.trim() || isLoading) return;
 
     setErrorMessage(null);
+    setLimitNotice(null);
     const newMessages: Message[] = [...messages, { role: 'user', content: text }];
     setMessages(newMessages);
     setInputValue('');
@@ -122,7 +124,11 @@ Early Traction & Pipeline Metrics (Phase 4 Prototype Preview):
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData = await response.json().catch(() => ({}));
+        if (errorData.code === 'ip_limit' || errorData.code === 'global_limit') {
+          setLimitNotice(errorData.code);
+          return;
+        }
         throw new Error(errorData.error || 'Failed to generate response');
       }
 
@@ -195,6 +201,25 @@ Early Traction & Pipeline Metrics (Phase 4 Prototype Preview):
           <div className="bg-rose-50 border border-rose-200 p-3 rounded-lg flex items-center gap-2.5 text-xs text-rose-800 max-w-md mx-auto">
             <AlertCircle className="w-4 h-4 shrink-0 text-rose-500" />
             <span>{errorMessage}</span>
+          </div>
+        )}
+
+        {limitNotice && (
+          <div className="bg-amber-50 border border-amber-200 p-3 rounded-lg flex items-start gap-2.5 text-xs text-amber-900 max-w-md mx-auto" role="status">
+            <AlertCircle className="w-4 h-4 shrink-0 text-amber-500 mt-px" />
+            <span>
+              {limitNotice === 'ip_limit'
+                ? "You've used today's 3 free questions. Try again tomorrow, or book a call to see the full version."
+                : "Today's demo questions are used up. Please try again tomorrow."}{' '}
+              <a
+                href="https://aimsmartsolutions.tech/contact/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-blue-700 underline"
+              >
+                Book a call
+              </a>
+            </span>
           </div>
         )}
 
