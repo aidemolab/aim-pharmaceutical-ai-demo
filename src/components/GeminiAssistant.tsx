@@ -6,10 +6,48 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { calculateOpportunityScores, calculateTractionMetrics } from '../lib/calculations';
 import { Send, Bot, User, Sparkles, MessageSquare, AlertCircle } from 'lucide-react';
+import Markdown, { type Components } from 'react-markdown';
+import remarkBreaks from 'remark-breaks';
 
 interface Message {
   role: 'user' | 'assistant';
   content: string;
+}
+
+// Model output is rendered as markdown. Raw HTML is dropped (skipHtml) and only
+// these elements are allowed, so nothing from the model is injected as HTML.
+const MARKDOWN_ELEMENTS = ['p', 'strong', 'em', 'ul', 'ol', 'li', 'br', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'code', 'blockquote', 'a', 'hr'];
+
+const markdownComponents: Components = {
+  p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+  strong: ({ children }) => <strong className="font-semibold text-slate-900">{children}</strong>,
+  ul: ({ children }) => <ul className="list-disc pl-5 mb-2 last:mb-0 space-y-1">{children}</ul>,
+  ol: ({ children }) => <ol className="list-decimal pl-5 mb-2 last:mb-0 space-y-1">{children}</ol>,
+  h1: ({ children }) => <p className="font-semibold text-slate-900 mb-1">{children}</p>,
+  h2: ({ children }) => <p className="font-semibold text-slate-900 mb-1">{children}</p>,
+  h3: ({ children }) => <p className="font-semibold text-slate-900 mb-1">{children}</p>,
+  h4: ({ children }) => <p className="font-semibold text-slate-900 mb-1">{children}</p>,
+  h5: ({ children }) => <p className="font-semibold text-slate-900 mb-1">{children}</p>,
+  h6: ({ children }) => <p className="font-semibold text-slate-900 mb-1">{children}</p>,
+  code: ({ children }) => <code className="bg-slate-100 rounded px-1 text-[0.85em]">{children}</code>,
+  blockquote: ({ children }) => <blockquote className="border-l-2 border-slate-300 pl-3 text-slate-600">{children}</blockquote>,
+  a: ({ children, href }) => (
+    <a href={href} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">{children}</a>
+  ),
+};
+
+function AssistantMarkdown({ text }: { text: string }) {
+  return (
+    <Markdown
+      remarkPlugins={[remarkBreaks]}
+      skipHtml
+      allowedElements={MARKDOWN_ELEMENTS}
+      unwrapDisallowed
+      components={markdownComponents}
+    >
+      {text}
+    </Markdown>
+  );
 }
 
 export default function DeepSeekAssistant() {
@@ -126,10 +164,14 @@ Early Traction & Pipeline Metrics (Phase 4 Prototype Preview):
                 className={`p-3.5 rounded-xl text-sm leading-relaxed shadow-sm ${
                   isUser
                     ? 'bg-blue-600 text-white rounded-tr-none'
-                    : 'bg-white border border-slate-200 text-slate-800 rounded-tl-none whitespace-pre-line'
+                    : 'bg-white border border-slate-200 text-slate-800 rounded-tl-none'
                 }`}
               >
-                {msg.content}
+                {isUser ? (
+                  <span className="whitespace-pre-line">{msg.content}</span>
+                ) : (
+                  <AssistantMarkdown text={msg.content} />
+                )}
               </div>
             </div>
           );
