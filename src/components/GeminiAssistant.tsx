@@ -31,9 +31,15 @@ const markdownComponents: Components = {
   h6: ({ children }) => <p className="font-semibold text-slate-900 mb-1">{children}</p>,
   code: ({ children }) => <code className="bg-slate-100 rounded px-1 text-[0.85em]">{children}</code>,
   blockquote: ({ children }) => <blockquote className="border-l-2 border-slate-300 pl-3 text-slate-600">{children}</blockquote>,
-  a: ({ children, href }) => (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">{children}</a>
-  ),
+  // AIM pages and demo apps open in the same tab; any other website opens in a new tab, labelled.
+  a: ({ children, href }) =>
+    href && !/^(https:\/\/aimsmartsolutions\.tech|https:\/\/aidemolab\.github\.io\/|mailto:|tel:|#|\/)/.test(href) ? (
+      <a href={href} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+        {children}<span aria-hidden="true"> ↗</span><span className="sr-only"> (opens in a new tab)</span>
+      </a>
+    ) : (
+      <a href={href} className="text-blue-600 underline">{children}</a>
+    ),
 };
 
 function AssistantMarkdown({ text }: { text: string }) {
@@ -212,9 +218,7 @@ Early Traction & Pipeline Metrics (Phase 4 Prototype Preview):
                 ? "You've used today's 3 free questions. Try again tomorrow, or book a call to see the full version."
                 : "Today's demo questions are used up. Please try again tomorrow."}{' '}
               <a
-                href="https://aimsmartsolutions.tech/contact/"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="https://aimsmartsolutions.tech/book-appointment/"
                 className="font-semibold text-blue-700 underline"
               >
                 Book a call
